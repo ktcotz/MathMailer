@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EmailDTO } from './dtos/email.dto';
+import { EmailDTO, EmailTemplate } from './dtos/email.dto';
 import * as nodemailer from 'nodemailer';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -15,12 +15,12 @@ export class MailService {
     },
   });
 
-  async sendEmail<T extends string>({
-    subject,
-    to,
-    template,
-    content,
-  }: EmailDTO<T>) {
+  async sendEmail<T extends string>({ to, template, content }: EmailDTO<T>) {
+    const subjects: Record<EmailTemplate, string> = {
+      welcome: 'Rejestracja w aplikacji Mathey',
+      notify: 'Powiadomienie',
+    };
+
     const source = readFileSync(
       join(process.cwd(), 'src', 'mail', 'templates', `${template}.hbs`),
       'utf-8',
@@ -35,7 +35,7 @@ export class MailService {
     const mailOptions = {
       from: process.env.EMAIL_FROM_USER,
       to,
-      subject,
+      subject: subjects[template],
       html,
     };
 
