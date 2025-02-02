@@ -18,6 +18,7 @@ export class MailService {
   async sendEmail<T extends string>({ to, template, content }: EmailDTO<T>) {
     const subjects: Record<EmailTemplate, string> = {
       welcome: 'Rejestracja w aplikacji Mathey',
+      reset: 'Zresetowanie hasła w aplikacji Mathey',
       notify: 'Powiadomienie',
     };
 
